@@ -1,5 +1,7 @@
 <script setup lang="ts">
-function donate() {}
+import DonateModal from "./DonateModal.vue"
+
+const isDonateModalOpen = ref(false)
 </script>
 
 <template>
@@ -10,17 +12,18 @@ function donate() {}
 				target="_blank"
 				title="GitHub link (opens in new tab)"
 				href="https://github.com/BizzarBlitz/HB3T"
-				class="hover:text-white underline cursor-ball-pointer"
+				class="hover:text-cream underline cursor-ball-pointer"
 				>HB3T</a
 			></span
 		>
-		<!-- [TODO]: Actually implement this -->
 		<button
-			@click="donate"
+			@click="isDonateModalOpen = true"
 			title="Donate some coins to the extension developer (please)"
-			class="hover:text-[lime] underline cursor-ball-pointer"
+			class="hover:text-green-400 underline cursor-ball-pointer"
 		>
 			Give coins
 		</button>
 	</div>
+
+	<DonateModal v-model="isDonateModalOpen" />
 </template>

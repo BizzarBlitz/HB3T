@@ -1,0 +1,4 @@
+/* Hide expected payout text here since we can't do that within our UI */
+.expected-payout {
+	display: none;
+}

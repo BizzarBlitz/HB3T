@@ -147,7 +147,6 @@ function retractBet() {
 					id: placedBet.participantId,
 					pool: match.participants.find((participant) => participant.id === placedBet?.participantId)?.pool ?? 1,
 				}"
-				style="margin-left: 0"
 				:left-align="true"
 			/>
 		</div>
@@ -190,13 +189,6 @@ function retractBet() {
 		background-image 0.3s ease,
 		color 0.3s ease,
 		border-color 0.3s ease;
-}
-
-.bet-button.compact {
-	padding: 7px 10px;
-	font-size: 10px;
-	letter-spacing: 0.5px;
-	border-width: 2px;
 }
 
 .bet-button:enabled {

@@ -4,4 +4,7 @@
 	--color-cream: #e8dcb8;
 
 	--cursor-ball-pointer: url("img/Cursor Select.png"), pointer;
+
+	--font-sans-bold: "Arial Black", "Impact", sans-serif;
+	--font-serif: "Times New Roman", Times, serif;
 }

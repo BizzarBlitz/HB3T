@@ -67,7 +67,7 @@ function goAllIn() {
 			placeholder="Wager amount"
 			autocomplete="off"
 			spellcheck="false"
-			class="ml-2 bg-[#06180d] border-amber-300 h-8 border-1 p-2 text-amber-300 rounded-sm w-42"
+			class="ml-1 bg-[#06180d] border-amber-300 h-8 border-1 p-2 text-amber-300 rounded-sm w-42"
 			style="box-shadow: inset 0 2px 5px white / 0.7"
 		/>
 		<Payout
