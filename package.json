@@ -2,7 +2,7 @@
 	"name": "hb3t",
 	"description": "Adds extra UI elements to the Ham's Ball Battles bet parlor",
 	"private": true,
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt",
@@ -22,7 +22,8 @@
 	},
 	"devDependencies": {
 		"@wxt-dev/module-vue": "^1.0.3",
-		"prettier": "3.9.8",
+		"prettier": "^3.9.8",
+		"prettier-plugin-tailwindcss": "^0.8.1",
 		"typescript": "^5.9.3",
 		"vite": "^8.1.5",
 		"vue-tsc": "^3.2.5",

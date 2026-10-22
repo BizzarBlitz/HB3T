@@ -11,6 +11,11 @@ const donateResult = ref({
 	isError: false,
 })
 
+// Not user-facing yet
+const totalDonated = storage.defineItem<number>("sync:totalDonated", {
+	fallback: 0,
+})
+
 function donate() {
 	if (!canDonate.value) return
 
@@ -42,6 +47,10 @@ function donate() {
 				return
 			}
 
+			totalDonated.getValue().then((value) => {
+				totalDonated.setValue(value + donation.value)
+			})
+
 			donateResult.value = {
 				isError: false,
 				message: "Thanks!",
@@ -60,9 +69,9 @@ function donate() {
 </script>
 
 <template>
-	<Modal @closed="donateResult = {message: '', isError: false}" class="text-lg max-w-75 max-h-200">
-		<div class="flex flex-col justify-between h-full items-center text-center">
-			<h2 class="font-sans-bold tracking-wider text-center text-xl border-b-2 text-[#f0c94a] uppercase">
+	<Modal @closed="donateResult = {message: '', isError: false}" class="max-h-200 max-w-75 text-lg">
+		<div class="flex h-full flex-col items-center justify-between text-center">
+			<h2 class="font-sans-bold border-b-2 text-center text-xl tracking-wider text-[#f0c94a] uppercase">
 				Make a donation
 			</h2>
 			<div class="w-full">
@@ -74,14 +83,14 @@ function donate() {
 					placeholder="Donation amount"
 					spellcheck="false"
 					autocomplete="off"
-					class="bg-[#06180d] border-amber-300 h-8 border-1 p-2 text-amber-300 rounded-sm w-48"
+					class="h-8 w-48 rounded-sm border-1 border-amber-300 bg-[#06180d] p-2 text-amber-300"
 				/>
 			</div>
 			<div class="justify-items-center">
 				<button
 					:disabled="!canDonate"
 					@click="donate"
-					class="donate-button block text-nowrap select-none px-6 py-3 text-sm uppercase cursor-ball-pointer"
+					class="donate-button cursor-ball-pointer block px-6 py-3 text-sm text-nowrap uppercase select-none"
 				>
 					Donate {{ donation.toLocaleString() }} {{ donation === 1 ? "coin" : "coins" }}
 				</button>

@@ -134,7 +134,7 @@ function retractBet() {
 
 <template>
 	<div class="mt-2 mb-4 flex items-center justify-between">
-		<div v-if="betError !== ''" class="text-red-500 text-shadow-[0_1px_2px_black] font-bold">
+		<div v-if="betError !== ''" class="font-bold text-red-500 text-shadow-[0_1px_2px_black]">
 			Error placing bet: {{ betError }}
 		</div>
 		<div v-if="placedBet !== undefined">
@@ -153,7 +153,7 @@ function retractBet() {
 		<button
 			:disabled="placedBet ? !canRetract : !canBet"
 			@click="placedBet ? retractBet() : placeBet()"
-			class="bet-button text-nowrap ml-auto px-6 py-3 text-sm uppercase cursor-ball-pointer"
+			class="bet-button cursor-ball-pointer ml-auto px-6 py-3 text-sm text-nowrap uppercase"
 			:class="placedBet && 'retract-button'"
 		>
 			<span v-show="!placedBet">Bet {{ wager.toLocaleString() }} {{ wager === 1 ? "coin" : "coins" }}</span>

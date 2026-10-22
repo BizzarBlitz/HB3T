@@ -24,14 +24,14 @@ watchEffect(() => {
 	<dialog
 		@click.self="isOpen = false"
 		ref="modal-dialog"
-		class="hb3t-modal not-open:hidden text-cream font-['Courier_New'] bg-linear-to-b from-[#123318] to-[#0a2211] grid m-auto min-h-100 min-w-75 border-3 rounded-xl"
+		class="hb3t-modal text-cream m-auto grid min-h-100 min-w-75 rounded-xl border-3 bg-linear-to-b from-[#123318] to-[#0a2211] font-['Courier_New'] not-open:hidden"
 	>
-		<div class="w-full h-full p-8">
+		<div class="h-full w-full p-8">
 			<form method="dialog" class="absolute top-2 right-2">
 				<button
 					@click="isOpen = false"
 					title="Close"
-					class="cursor-ball-pointer w-6 h-6 text-[#a8c9a8] hover:text-[#f0c94a] text-lg font-bold"
+					class="cursor-ball-pointer h-6 w-6 text-lg font-bold text-[#a8c9a8] hover:text-[#f0c94a]"
 				>
 					✕
 				</button>

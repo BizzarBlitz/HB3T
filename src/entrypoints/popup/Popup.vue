@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import betData from "@/modules/betData"
+import Settings from "@/components/Settings.vue"
 import {useTimeAgo} from "@vueuse/core"
 
 function sendNotification(delay: number) {
@@ -19,11 +19,14 @@ browser.notifications.onClicked.addListener((id) => {
 })
 
 const wheelCountdown = ref("Loading")
+const wheelReadyTime = ref("00:00")
 storage
 	.getItem<number>("sync:nextWheelSpin")
 	.then((nextWheelSpin) => {
 		console.log("Retrieval success:", nextWheelSpin)
-		wheelCountdown.value = useTimeAgo(new Date(nextWheelSpin ?? Date.now())) as any
+		const nextWheelDate = new Date(nextWheelSpin ?? Date.now())
+		wheelCountdown.value = useTimeAgo(nextWheelDate) as any
+		wheelReadyTime.value = nextWheelDate.toLocaleTimeString()
 	})
 	.catch((err) => {
 		console.warn("Retrieval not success:", err)
@@ -36,7 +39,9 @@ function syncWheelCooldown() {
 	browser.runtime
 		.sendMessage("sync-wheel-cooldown")
 		.then((nextWheelSpin) => {
-			wheelCountdown.value = useTimeAgo(new Date(nextWheelSpin)) as any
+			const nextWheelDate = new Date(nextWheelSpin ?? Date.now())
+			wheelCountdown.value = useTimeAgo(nextWheelDate) as any
+			wheelReadyTime.value = nextWheelDate.toLocaleTimeString()
 		})
 		.catch((err) => {
 			console.warn("Could not sync:", err)
@@ -48,21 +53,20 @@ function syncWheelCooldown() {
 </script>
 
 <template>
-	<div id="root" class="text-cream min-w-64 min-h-32">
-		<div class="mb-2 text-xl">
-			Next wheel spin: <b>{{ wheelCountdown }}</b>
+	<div id="root" class="text-cream flex min-h-32 min-w-64 flex-col p-2 text-sm">
+		<Settings />
+		<div class="mt-2 text-xs opacity-80">
+			<hr class="mb-1" />
+			Next wheel spin:
 			<button
-				:disabled="isSyncing /* Less chance of breaking something (also visual feedback) */"
+				:disabled="isSyncing"
 				@click="syncWheelCooldown"
-				class="ml-2 cursor-pointer underline disabled:text-gray-400 disabled:no-underline"
+				title="Click to refresh"
+				class="cursor-pointer font-bold hover:underline disabled:text-gray-400 disabled:no-underline"
 			>
-				(Refresh)
+				{{ wheelCountdown }}
 			</button>
+			({{ wheelReadyTime }})
 		</div>
-
-		<button class="border-1 border-white cursor-pointer block mb-2" @click="sendNotification(0.1)">Send notif</button>
-		<button class="border-1 border-white cursor-pointer block mb-2" @click="sendNotification(3)">Send notif (3)</button>
-
-		<div>Hi! {{ betData.placedBets }}</div>
 	</div>
 </template>

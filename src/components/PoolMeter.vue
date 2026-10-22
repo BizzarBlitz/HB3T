@@ -80,10 +80,10 @@ watchEffect(() => {
 </script>
 
 <template>
-	<div class="border-[#3a6b45] border-1 overflow-hidden rounded-sm flex flex-row h-8 text-white" :style="barOverrides">
+	<div class="flex h-8 flex-row overflow-hidden rounded-sm border-1 border-[#3a6b45] text-white" :style="barOverrides">
 		<div
 			v-for="(participant, i) in match.participants"
-			class="pool-bar whitespace-nowrap grow gap-[0.5ch] font-black flex flex-row flex-nowrap items-center text-shadow-[0_1px_2px_black] content-center"
+			class="pool-bar flex grow flex-row flex-nowrap content-center items-center gap-[0.5ch] font-black whitespace-nowrap text-shadow-[0_1px_2px_black]"
 			:class="[
 				{
 					'pl-2': i === 0,
@@ -106,8 +106,8 @@ watchEffect(() => {
 			}"
 		>
 			<span class="z-1">{{ participant.pool.toLocaleString() }}</span>
-			<span v-show="selectedParticipant?.id === participant.id && wager > 0" class="text-green-400 z-1">+</span>
-			<span v-show="selectedParticipant?.id === participant.id && wager > 0" class="text-green-400 z-1">
+			<span v-show="selectedParticipant?.id === participant.id && wager > 0" class="z-1 text-green-400">+</span>
+			<span v-show="selectedParticipant?.id === participant.id && wager > 0" class="z-1 text-green-400">
 				{{ wager.toLocaleString() }}
 			</span>
 		</div>
@@ -138,11 +138,11 @@ watchEffect(() => {
 				'border-color': METER_COLORS[selectedParticipantIndex ?? 0],
 			}"
 		>
-			<div class="wager-stripes w-full h-full will-change-[opacity,_background-position]"></div>
+			<div class="wager-stripes h-full w-full will-change-[opacity,_background-position]"></div>
 		</div>
 
 		<div
-			class="midpoint-indicator w-[20px] h-min -translate-y-[calc(100%+2px)] left-1/2 -translate-x-1/2 absolute text-center select-none text-[#f0c94a]"
+			class="midpoint-indicator absolute left-1/2 h-min w-[20px] -translate-x-1/2 -translate-y-[calc(100%+2px)] text-center text-[#f0c94a] select-none"
 			style="text-box-edge: cap alphabetic; text-box-trim: trim-both"
 		>
 			▼

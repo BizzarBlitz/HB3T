@@ -63,5 +63,5 @@ watch(profit, (newProfit) => {
 			</tr>
 		</tbody>
 	</table>
-	<div v-show="selectedParticipant === undefined" class="w-fit ml-1">Pick a side to see profit margins</div>
+	<div v-show="selectedParticipant === undefined" class="ml-1 w-fit">Pick a side to see profit margins</div>
 </template>

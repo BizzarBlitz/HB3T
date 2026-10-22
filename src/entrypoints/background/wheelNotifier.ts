@@ -1,6 +1,9 @@
+import useStoredValue from "@/modules/composables/useStoredValue"
 import {listenForMessage} from "./listenForMessage"
 
 const WHEEL_COOLDOWN_MILLIS = 86_400_000 // 24 hours
+
+const sendWheelNotifications = useStoredValue("local:setting-wheel-notifications", true)
 
 const nextWheelSpin = storage.defineItem<number>("sync:nextWheelSpin", {
 	init: () => {
@@ -58,13 +61,17 @@ function resetWheelCooldown() {
 }
 
 function sendWheelReadyNotfication() {
-	console.log("Sending notification")
-	browser.notifications.create("hbb-wheel-available", {
-		type: "basic",
-		iconUrl: "../../../icon/128.png",
-		title: "[Ham's Ball Battles]: Daily wheel is ready to spin",
-		message: "Click to open page",
+	sendWheelNotifications.then((notificationsEnabled) => {
+		if (notificationsEnabled.state.value) {
+			browser.notifications.create("hbb-wheel-available", {
+				type: "basic",
+				iconUrl: "../../../icon/128.png",
+				title: "[Ham's Ball Battles]: Daily wheel is ready to spin",
+				message: "Click to open page",
+			})
+		}
 	})
+
 	nextWheelSpin.setMeta({alreadyNotified: true})
 }
 
