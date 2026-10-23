@@ -65,7 +65,6 @@ watchEffect(() => {
 	const shouldRender = placedBet.value ? true : props.selectedParticipant && displayWager.value > 0
 
 	if (!shouldRender) {
-		console.log("Nothing?", props.selectedParticipant, displayWager.value)
 		barOverrides.value = {
 			"--would-be-pool": props.selectedParticipant?.pool ?? 1,
 			"--would-be-total": total.value,
@@ -82,13 +81,11 @@ watchEffect(() => {
 	}
 
 	if (!newPool || newPool === 1) {
-		console.log("Nothing AGAIN?")
 		barOverrides.value = {
 			"--would-be-pool": props.selectedParticipant?.pool ?? 1,
 			"--would-be-total": total.value,
 		}
 	} else {
-		console.log("SOMETHING?")
 		barOverrides.value = {
 			"--would-be-pool": newPool,
 			"--would-be-total": placedBet.value ? total.value : payoutInfo.value.total,

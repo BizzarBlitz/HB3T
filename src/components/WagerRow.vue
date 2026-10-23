@@ -37,15 +37,15 @@ const chipColors = [
 
 const wagerInput = ref("")
 watch(wagerInput, (newInput) => {
-	if (Number.isNaN(parseInt(wagerInput.value))) {
+	if (Number.isNaN(parseInt(newInput))) {
 		wager.value = 0
 	} else {
-		wager.value = parseInt(wagerInput.value)
+		wager.value = parseInt(newInput)
 	}
 })
 
-watch(wager, (value) => {
-	if (value >= 100_000_000) {
+watch(wager, (value, previous) => {
+	if (value >= 100_000_000 || previous >= 100_000_000) {
 		wagerInput.value = "Relax."
 	} else {
 		wagerInput.value = value.toString()
