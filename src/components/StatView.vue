@@ -1,15 +1,41 @@
 <script setup lang="ts">
+import betData from "@/modules/betData.ts"
 import PoolMeter from "./PoolMeter.vue"
 import type {Match, Participant} from "@/modules/betData.ts"
 
 const props = defineProps<{
-	match: Match
 	elements: {
 		matchCard: HTMLElement
 		selectButtons: Record<string, HTMLButtonElement> // <participantId, button>
 	}
 }>()
 provide("matchCard", props.elements.matchCard)
+
+const match = computed((): Match => {
+	const placeholderMatch: Match = {
+		id: props.elements.matchCard.dataset.id || "loading-id",
+		participants: [
+			{
+				id: "al",
+				name: "Al",
+				pool: 1,
+			},
+			{
+				id: "bosh",
+				name: "Bosh",
+				pool: 1,
+			},
+		],
+	}
+
+	if (!betData.scheduledMatches) return placeholderMatch
+
+	return (
+		betData.scheduledMatches.find((match) => {
+			return match.id === props.elements.matchCard.dataset.matchId
+		}) ?? placeholderMatch
+	)
+})
 
 const selectedParticipantId = ref()
 watch(
@@ -26,7 +52,7 @@ watch(
 )
 
 const selectedParticipant = computed<Participant | undefined>(() => {
-	return props.match.participants.find((participant) => {
+	return match.value.participants.find((participant) => {
 		return participant.id === selectedParticipantId.value
 	})
 })

@@ -1,10 +1,11 @@
 import "@/assets/tailwind.css"
-// import "./style.css"
-import watchForChildren from "@/modules/watchForChildren.ts"
 import StatView from "@/components/StatView.vue"
 import Watermark from "@/components/Watermark.vue"
+import betData, {waitForBetDataLoad, type Match} from "@/modules/betData"
+import injectRefreshButton from "./injectRefreshButton"
+import pollMatchData from "./pollMatchData"
+import watchForChildren from "@/modules/watchForChildren.ts"
 import type {ContentScriptContext} from "#imports"
-import betData, {waitForBetDataLoad} from "@/modules/betData"
 
 function onMatchCardAdded(ctx: ContentScriptContext) {
 	return async (matchCard: Element) => {
@@ -45,9 +46,6 @@ function onMount(matchCard: HTMLElement) {
 		matchCard.querySelector<HTMLElement>(".wager-row")!.style.display = "none"
 
 		const app = createApp(StatView, {
-			match: betData.scheduledMatches.find((match) => {
-				return match.id === matchCard.dataset.matchId
-			})!,
 			elements: {
 				matchCard,
 				selectButtons: getSelectButtons(matchCard),
@@ -77,5 +75,7 @@ export default defineContentScript({
 	main(ctx) {
 		const openMatches = document.body.querySelector("#open-matches-list")
 		watchForChildren(openMatches!, ".match-card", onMatchCardAdded(ctx))
+		pollMatchData()
+		injectRefreshButton(ctx)
 	},
 })

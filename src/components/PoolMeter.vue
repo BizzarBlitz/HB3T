@@ -83,7 +83,7 @@ watchEffect(() => {
 	<div class="flex h-8 flex-row overflow-hidden rounded-sm border-1 border-[#3a6b45] text-white" :style="barOverrides">
 		<div
 			v-for="(participant, i) in match.participants"
-			class="pool-bar flex grow flex-row flex-nowrap content-center items-center gap-[0.5ch] font-black whitespace-nowrap text-shadow-[0_1px_2px_black]"
+			class="pool-bar flex grow flex-row flex-nowrap content-center items-center gap-[0.5ch] font-black whitespace-nowrap transition-[flex-basis] will-change-[flex-basis] text-shadow-[0_1px_2px_black]"
 			:class="[
 				{
 					'pl-2': i === 0,
@@ -113,11 +113,11 @@ watchEffect(() => {
 		</div>
 
 		<div
-			v-show="wager > 0 && selectedParticipant !== undefined"
-			class="border-0 bg-fixed"
+			class="border-0 bg-fixed duration-200 will-change-[flex-basis] motion-safe:transition-[flex-basis]"
 			:class="{
 				'border-l-0': selectedParticipantIndex !== match.participants.length - 1,
 				'border-r-0': selectedParticipantIndex === match.participants.length - 1,
+				// 'opacity-0': !(wager > 0 && selectedParticipant !== undefined),
 			}"
 			style="
 				--stripe-width: 5px;

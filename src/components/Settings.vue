@@ -2,9 +2,10 @@
 import useStoredValue from "@/modules/composables/useStoredValue"
 
 const settings = reactive({
-	"Send daily wheel notifications": useStoredValue("local:setting-wheel-notifications", true),
+	"Auto-refresh match data": useStoredValue("local:setting-auto-refresh", true),
 	"Larger chip values": useStoredValue("local:setting-larger-chip-values", true),
 	"Chips override wager": useStoredValue("local:setting-chip-override", false),
+	"Send daily wheel notifications": useStoredValue("local:setting-wheel-notifications", true),
 })
 </script>
 
