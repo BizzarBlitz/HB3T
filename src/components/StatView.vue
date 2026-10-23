@@ -38,11 +38,14 @@ const match = computed((): Match => {
 })
 
 const selectedParticipantId = ref()
+watch(selectedParticipantId, (newId) => {
+	props.elements.selectButtons[newId]?.click()
+})
 watch(
 	() => props.elements.selectButtons,
 	(selectButtons) => {
 		for (const [participantId, button] of Object.entries(selectButtons)) {
-			// Use onclick here to prevent event stacking by overriding previous
+			// Set onclick property to override previous handler and prevent event stacking
 			button.onclick = () => {
 				selectedParticipantId.value = participantId
 			}
@@ -60,6 +63,6 @@ const selectedParticipant = computed<Participant | undefined>(() => {
 
 <template>
 	<div class="mt-3 font-[Courier_New]">
-		<PoolMeter :match :selected-participant />
+		<PoolMeter :match :selected-participant v-model="selectedParticipantId" />
 	</div>
 </template>

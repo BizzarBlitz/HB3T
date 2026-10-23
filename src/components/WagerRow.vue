@@ -11,8 +11,11 @@ defineProps<{
 	total: number
 }>()
 
+const wager = defineModel<number>({
+	default: 0,
+})
+
 const emit = defineEmits<{
-	wagerUpdated: [wager: number]
 	payoutInfoUpdated: [payoutInfo: PayoutInfo]
 }>()
 
@@ -33,18 +36,20 @@ const chipColors = [
 ]
 
 const wagerInput = ref("")
-const wager = computed(() => {
+watch(wagerInput, (newInput) => {
 	if (Number.isNaN(parseInt(wagerInput.value))) {
-		return 0
+		wager.value = 0
 	} else {
-		return parseInt(wagerInput.value)
+		wager.value = parseInt(wagerInput.value)
 	}
 })
+
 watch(wager, (value) => {
 	if (value >= 100_000_000) {
 		wagerInput.value = "Relax."
+	} else {
+		wagerInput.value = value.toString()
 	}
-	emit("wagerUpdated", value)
 })
 
 const chipsOverrideValues = useStoredValue("local:setting-chip-override", false)
