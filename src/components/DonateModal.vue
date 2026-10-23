@@ -20,7 +20,6 @@ function donate() {
 	if (!canDonate.value) return
 
 	inProgressDonation.value = true
-	// [TODO]: Open default profile widget and use that? or just send http manually
 	fetch("https://api.hamsballbattles.com/send-coins", {
 		method: "POST",
 		credentials: "include",

@@ -74,7 +74,13 @@ function goAllIn() {
 
 <template>
 	<div class="mt-3 flex items-center gap-2">
-		<Chip v-for="(value, i) in chipValues" :amount="value" :color0="chipColors[i]![0]!" :color1="chipColors[i]![1]!" />
+		<Chip
+			v-for="(value, i) in chipValues"
+			:amount="value"
+			:color0="chipColors[i]![0]!"
+			:color1="chipColors[i]![1]!"
+			@click="incrementWager(value)"
+		/>
 		<Chip
 			:amount="-1"
 			color0="#3a3a3a"
