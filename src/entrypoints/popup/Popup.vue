@@ -2,17 +2,6 @@
 import Settings from "@/components/Settings.vue"
 import {useTimeAgo} from "@vueuse/core"
 
-function sendNotification(delay: number) {
-	setTimeout(() => {
-		browser.notifications.create("hbb-wheel-available", {
-			type: "basic",
-			iconUrl: "../../../wxt.svg",
-			title: "[Ham's Ball Battles]: Daily wheel is ready to spin",
-			message: "Click to open page",
-		})
-	}, delay * 1000)
-}
-
 browser.notifications.onClicked.addListener((id) => {
 	if (id !== "hbb-wheel-available") return
 	window.open("https://hamsballbattles.com/wheel")
