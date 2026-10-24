@@ -2,7 +2,7 @@
 	"name": "hb3t",
 	"description": "Adds extra UI elements to the Ham's Ball Battles bet parlor",
 	"private": true,
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt",
