@@ -141,11 +141,13 @@ function retractBet() {
 			You bet <b class="text-green-400">{{ placedBet.wager.toLocaleString() }} coins</b> on
 			<b>{{ placedBet.participantName }}</b>
 			<Payout
-				:total="placedTotal"
+				:total="placedTotal - placedBet.wager"
 				:wager="placedBet.wager"
 				:selected-participant="{
 					id: placedBet.participantId,
-					pool: match.participants.find((participant) => participant.id === placedBet?.participantId)?.pool ?? 1,
+					pool:
+						(match.participants.find((participant) => participant.id === placedBet?.participantId)?.pool ?? 1) -
+						placedBet.wager,
 				}"
 				:left-align="true"
 			/>

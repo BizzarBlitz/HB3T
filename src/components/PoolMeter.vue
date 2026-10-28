@@ -42,6 +42,11 @@ const total = computed(() => {
 const placedBet = computed(() => {
 	return betData.placedBets.find((bet) => bet.matchId === props.match.id)
 })
+const placedBetParticipant = computed(() => {
+	if (placedBet.value) {
+		return props.match.participants.find((participant) => participant.id === placedBet.value!.participantId)
+	}
+})
 
 const wager = ref(0)
 const payoutInfo = ref({
@@ -51,6 +56,21 @@ const payoutInfo = ref({
 	payout: 0,
 	profit: 0,
 })
+
+function setMidpointWager() {
+	if (props.match.participants.length !== 2) return
+
+	const participant0 = props.match.participants[0]!
+	const participant1 = props.match.participants[1]!
+
+	if (participant0.pool === participant1.pool) {
+		wager.value = 0
+		return
+	}
+
+	selectedParticipantId.value = participant0.pool < participant1.pool ? participant0.id : participant1.id
+	wager.value = Math.abs(participant0.pool - participant1.pool)
+}
 
 const barOverrides = ref({
 	"--would-be-pool": 0,
@@ -72,15 +92,14 @@ watchEffect(() => {
 		return
 	}
 
-	let newPool = 0
-	if (placedBet.value) {
-		const participant = props.match.participants.find((participant) => participant.id === placedBet.value!.participantId)
-		newPool = participant!.pool
+	let newPool = 1
+	if (placedBetParticipant.value) {
+		newPool = placedBetParticipant.value.pool
 	} else {
 		newPool = payoutInfo.value.pool
 	}
 
-	if (!newPool || newPool === 1) {
+	if (newPool === 1) {
 		barOverrides.value = {
 			"--would-be-pool": props.selectedParticipant?.pool ?? 1,
 			"--would-be-total": total.value,
@@ -92,21 +111,6 @@ watchEffect(() => {
 		}
 	}
 })
-
-function setMidpointWager() {
-	if (props.match.participants.length !== 2) return
-
-	const participant0 = props.match.participants[0]!
-	const participant1 = props.match.participants[1]!
-
-	if (participant0.pool === participant1.pool) {
-		wager.value = 0
-		return
-	}
-
-	selectedParticipantId.value = participant0.pool < participant1.pool ? participant0.id : participant1.id
-	wager.value = Math.abs(participant0.pool - participant1.pool)
-}
 </script>
 
 <template>
@@ -125,7 +129,9 @@ function setMidpointWager() {
 				},
 			]"
 			:style="{
-				'--width': `calc(${participant.pool} / var(--would-be-total, ${total}) * 100%)`,
+				'--participant-pool': `${placedBet?.participantId === participant.id ? participant.pool - (placedBet?.wager ?? 0) : participant.pool}`,
+				'--total': `var(--would-be-total, ${total})`,
+				'--width': `calc(var(--participant-pool)/var(--total) * 100%)`,
 				// Use max-width with flex basis to prevent long text from increasing bar size
 				'min-width': 0, // Allow shrinking
 				// 'max-width': 'var(--width)',
@@ -136,8 +142,21 @@ function setMidpointWager() {
 			}"
 		>
 			<span class="z-1">{{ participant.pool.toLocaleString() }}</span>
-			<span v-show="selectedParticipant?.id === participant.id && displayWager > 0" class="z-1 text-green-400">+</span>
-			<span v-show="selectedParticipant?.id === participant.id && displayWager > 0" class="z-1 text-green-400">
+			<span
+				v-show="
+					(selectedParticipant?.id === participant.id && displayWager > 0) ||
+					placedBet?.participantId === participant.id
+				"
+				class="z-1 text-green-400"
+				>+</span
+			>
+			<span
+				v-show="
+					(selectedParticipant?.id === participant.id && displayWager > 0) ||
+					placedBet?.participantId === participant.id
+				"
+				class="z-1 text-green-400"
+			>
 				{{ displayWager.toLocaleString() }}
 			</span>
 		</div>
@@ -165,7 +184,10 @@ function setMidpointWager() {
 							match.participants.findIndex((participant) => participant.id === placedBet!.participantId) ?? 0
 						]
 					: METER_COLORS[selectedParticipantIndex ?? 0],
-				'flex-basis': `calc((var(--would-be-pool, 0) - ${placedBet ? (props.match.participants.find((participant) => participant.id === placedBet!.participantId)?.pool ?? 1) - placedBet.wager : (selectedParticipant?.pool ?? 1)})/var(--would-be-total, ${total}) * 100%)`,
+				'--selected-pool': `calc(var(--would-be-pool, 1) - ${placedBet && placedBetParticipant ? placedBetParticipant.pool - placedBet.wager : (selectedParticipant?.pool ?? 1)})`,
+				'--total': `var(--would-be-total, ${total})`,
+				'--width': 'calc(var(--selected-pool)/var(--total) * 100%)',
+				'flex-basis': 'var(--width)',
 				order:
 					(selectedParticipantIndex === match.participants.length - 1 ? -1 : 1) +
 					(selectedParticipantIndex ?? 0) * 10,
