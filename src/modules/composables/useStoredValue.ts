@@ -8,6 +8,12 @@ export default function <T>(key: StorageItemKey, initialValue?: T, opts?: UseAsy
 		...asyncState
 	} = useAsyncState<T | null, [], true>(() => storage.getItem(key), initialValue ?? null, opts)
 
+	if (initialValue !== undefined) {
+		storage.defineItem(key, {
+			init: () => initialValue,
+		})
+	}
+
 	// Listen for changes
 	let unwatch: (() => void) | undefined
 	onMounted(() => {
