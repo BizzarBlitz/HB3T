@@ -135,4 +135,6 @@ export async function waitForBetDataLoad() {
 	})
 }
 
+export const waitingOnUiRefresh = ref(false) // Not really used by this module it's for refreshing the ui after placing/retracting a bet
+
 refreshBetData()

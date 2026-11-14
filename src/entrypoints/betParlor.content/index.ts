@@ -1,7 +1,7 @@
 import "@/assets/tailwind.css"
 import StatView from "@/components/StatView.vue"
 import Watermark from "@/components/Watermark.vue"
-import betData, {waitForBetDataLoad, type Match} from "@/modules/betData"
+import {refreshBetData, waitForBetDataLoad, waitingOnUiRefresh} from "@/modules/betData"
 import injectRefreshButton from "./injectRefreshButton"
 import pollMatchData from "./pollMatchData"
 import watchForChildren from "@/modules/watchForChildren.ts"
@@ -9,6 +9,11 @@ import type {ContentScriptContext} from "#imports"
 
 function onMatchCardAdded(ctx: ContentScriptContext) {
 	return async (matchCard: Element) => {
+		if (waitingOnUiRefresh.value) {
+			waitingOnUiRefresh.value = false
+			refreshBetData()
+		}
+
 		// Main UI modifications
 		createShadowRootUi(ctx, {
 			name: "hb3t-augments",

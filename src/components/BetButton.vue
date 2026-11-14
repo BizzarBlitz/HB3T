@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Payout from "./Payout.vue"
-import betData, {refreshBetData, type Match, type Participant, type PlacedBet} from "@/modules/betData"
+import betData, {refreshBetData, waitingOnUiRefresh, type Match, type Participant, type PlacedBet} from "@/modules/betData"
 
 const props = defineProps<{
 	match: Match
@@ -35,6 +35,7 @@ const canRetract = computed(() => {
 })
 
 async function processBetResponse(betToPlace: PlacedBet) {
+	waitingOnUiRefresh.value = true
 	const statusCode = await browser.runtime.sendMessage("await-bet-response")
 
 	if (Math.floor(statusCode / 100) === 2) {
@@ -55,6 +56,7 @@ async function processBetResponse(betToPlace: PlacedBet) {
 }
 
 async function processRetractResponse() {
+	waitingOnUiRefresh.value = true
 	const statusCode = await browser.runtime.sendMessage("await-retract-response")
 
 	if (Math.floor(statusCode / 100) === 2) {
