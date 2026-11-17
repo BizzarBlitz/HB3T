@@ -7,7 +7,7 @@ browser.notifications.onClicked.addListener((id) => {
 	window.open("https://hamsballbattles.com/wheel")
 })
 
-const wheelCountdown = ref("Loading")
+const wheelCountdown = ref("Loading... (click to refresh)")
 const wheelReadyTime = ref("00:00")
 storage
 	.getItem<number>("sync:nextWheelSpin")

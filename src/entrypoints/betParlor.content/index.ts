@@ -76,6 +76,7 @@ function getSelectButtons(matchCard: Element) {
 export default defineContentScript({
 	matches: ["*://*.hamsballbattles.com/bet"],
 	cssInjectionMode: "ui",
+	allFrames: true,
 
 	main(ctx) {
 		const openMatches = document.body.querySelector("#open-matches-list")

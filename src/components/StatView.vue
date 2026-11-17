@@ -39,20 +39,32 @@ const match = computed((): Match => {
 
 const selectedParticipantId = ref()
 watch(selectedParticipantId, (newId) => {
+	console.log("Clicking select button", props.elements.selectButtons[newId])
 	props.elements.selectButtons[newId]?.click()
 })
 watch(
 	() => props.elements.selectButtons,
 	(selectButtons) => {
 		for (const [participantId, button] of Object.entries(selectButtons)) {
-			// Set onclick property to override previous handler and prevent event stacking
-			button.onclick = () => {
+			addSelectButtonClickListener(button, () => {
 				selectedParticipantId.value = participantId
-			}
+			})
+
+			// // Set onclick property to override previous handler and prevent event stacking
+			// button.onclick = () => {
+			//
+			// }
 		}
 	},
 	{immediate: true},
 )
+
+function addSelectButtonClickListener(button: HTMLButtonElement, listener: () => void) {
+	if (!button.dataset.hb3tListening) {
+		button.dataset.hb3tListening = "true"
+		button.addEventListener("click", listener)
+	}
+}
 
 const selectedParticipant = computed<Participant | undefined>(() => {
 	return match.value.participants.find((participant) => {

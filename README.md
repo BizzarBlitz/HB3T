@@ -17,3 +17,14 @@ Download the latest release [here](https://github.com/BizzarBlitz/HB3T/releases/
 2. Run `npm run zip` or `wxt zip` in the terminal
     - If you're using Firefox, use `npm run zip:firefox` or `wxt zip -b firefox` instead
 3. Load the zip file as an unpacked extension (you may need to enable developer mode in your browser settings to do this)
+
+### From Firefox sources.zip
+
+Run these commands:
+
+```sh
+npm i
+npm run zip:firefox
+```
+
+See also: https://wxt.dev/guide/essentials/publishing.html#firefox-addon-store

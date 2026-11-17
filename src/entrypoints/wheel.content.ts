@@ -1,5 +1,6 @@
 export default defineContentScript({
 	matches: ["*://*.hamsballbattles.com/wheel"],
+	allFrames: true,
 
 	main(ctx) {
 		function sendMessageOnWheelSpin() {

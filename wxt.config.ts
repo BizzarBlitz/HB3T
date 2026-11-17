@@ -13,6 +13,13 @@ export default defineConfig({
 		name: "[HB3T] Ham's Ball Battles Bet Tweaks",
 		permissions: ["notifications", "storage", "webRequest"],
 		host_permissions: ["https://api.hamsballbattles.com/*"],
+		browser_specific_settings: {
+			gecko: {
+				data_collection_permissions: {
+					required: ["none"], // HB3T doesn't collect your data :)
+				},
+			},
+		},
 	},
 
 	hooks: {
