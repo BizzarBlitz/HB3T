@@ -19,7 +19,7 @@ const isDonateModalOpen = ref(false)
 		<button
 			@click="isDonateModalOpen = true"
 			title="Donate some coins to the extension developer (please)"
-			class="cursor-ball-pointer underline hover:text-green-400"
+			class="cursor-ball-pointer hover:text-cash underline"
 		>
 			Give coins
 		</button>

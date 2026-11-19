@@ -2,6 +2,7 @@
 import betData, {type Match, type Participant} from "@/modules/betData.ts"
 import BetButton from "./BetButton.vue"
 import WagerRow from "./WagerRow.vue"
+import isLargeWager from "@/modules/isLargeWager.ts"
 
 const props = defineProps<{
 	match: Match
@@ -16,6 +17,8 @@ const METER_COLORS = [
 	"#3fc478", // Green
 	"#ffd35c", // Yellow
 ]
+
+const largeWager = computed(() => isLargeWager(wager.value, placedBet.value))
 
 const selectedParticipantIndex = computed(() => {
 	const index = props.match.participants.findIndex((participant) => participant.id === props.selectedParticipant?.id)
@@ -147,7 +150,8 @@ watchEffect(() => {
 					(selectedParticipant?.id === participant.id && displayWager > 0) ||
 					placedBet?.participantId === participant.id
 				"
-				class="z-1 text-green-400"
+				class="z-1"
+				:class="largeWager ? 'text-gold' : 'text-cash'"
 				>+</span
 			>
 			<span
@@ -155,7 +159,8 @@ watchEffect(() => {
 					(selectedParticipant?.id === participant.id && displayWager > 0) ||
 					placedBet?.participantId === participant.id
 				"
-				class="z-1 text-green-400"
+				class="z-1"
+				:class="largeWager ? 'text-gold' : 'text-cash'"
 			>
 				{{ displayWager.toLocaleString() }}
 			</span>
@@ -184,6 +189,7 @@ watchEffect(() => {
 							match.participants.findIndex((participant) => participant.id === placedBet!.participantId) ?? 0
 						]
 					: METER_COLORS[selectedParticipantIndex ?? 0],
+				'--stripe-color': largeWager ? 'var(--color-gold)' : 'var(--color-cash)',
 				'--selected-pool': `calc(var(--would-be-pool, 1) - ${placedBet && placedBetParticipant ? placedBetParticipant.pool - placedBet.wager : (selectedParticipant?.pool ?? 1)})`,
 				'--total': `var(--would-be-total, ${total})`,
 				'--width': 'calc(var(--selected-pool)/var(--total) * 100%)',
@@ -236,8 +242,8 @@ watchEffect(() => {
 	/* background-size: 200% 200%; */
 	background-image: repeating-linear-gradient(
 		45deg,
-		color-mix(in oklab, var(--color-green-400) 80%, transparent),
-		color-mix(in oklab, var(--color-green-400) 80%, transparent) var(--stripe-width),
+		color-mix(in oklab, var(--stripe-color) 80%, transparent),
+		color-mix(in oklab, var(--stripe-color) 80%, transparent) var(--stripe-width),
 		var(--selected-color) var(--stripe-width),
 		var(--selected-color) calc(var(--stripe-width) * 2)
 	);

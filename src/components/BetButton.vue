@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import isLargeWager from "@/modules/isLargeWager.ts"
 import Payout from "./Payout.vue"
 import betData, {refreshBetData, waitingOnUiRefresh, type Match, type Participant, type PlacedBet} from "@/modules/betData"
 
@@ -24,6 +25,23 @@ const placedTotal = computed(() => {
 
 const matchCard = inject<HTMLElement>("matchCard")!
 
+const largeWager = computed(() => isLargeWager(props.wager, placedBet.value))
+const aboutToBetLargeWager = ref(false)
+const betButtonText = computed(() => {
+	if (aboutToBetLargeWager.value) {
+		return "Are you sure?"
+	} else {
+		return `Bet ${props.wager.toLocaleString()} ${props.wager === 1 ? "coin" : "coins"}`
+	}
+})
+
+watch(
+	() => props.wager,
+	() => {
+		aboutToBetLargeWager.value = false
+	},
+)
+
 const requestInProgress = ref(false)
 const betError = ref("")
 
@@ -31,7 +49,7 @@ const canBet = computed(() => {
 	return props.wager > 0 && props.selectedParticipant !== undefined && !requestInProgress.value
 })
 const canRetract = computed(() => {
-	return !requestInProgress.value
+	return !largeWager.value && !requestInProgress.value
 })
 
 async function processBetResponse(betToPlace: PlacedBet) {
@@ -74,6 +92,10 @@ async function processRetractResponse() {
 }
 
 async function placeBet() {
+	if (largeWager.value) {
+		aboutToBetLargeWager.value = true
+	}
+
 	const wagerInput = matchCard.querySelector<HTMLInputElement>(".wager-input")
 	const placeBetButton = matchCard.querySelector<HTMLButtonElement>(".place-bet-btn")
 
@@ -137,10 +159,10 @@ function retractBet() {
 <template>
 	<div class="mt-2 mb-4 flex items-center justify-between">
 		<div v-if="betError !== ''" class="font-bold text-red-500 text-shadow-[0_1px_2px_black]">
-			Error placing bet: {{ betError }}
+			Error bet: {{ betError }}
 		</div>
 		<div v-if="placedBet !== undefined">
-			You bet <b class="text-green-400">{{ placedBet.wager.toLocaleString() }} coins</b> on
+			You bet <b :class="largeWager ? 'text-gold' : 'text-cash'">{{ placedBet.wager.toLocaleString() }} coins</b> on
 			<b>{{ placedBet.participantName }}</b>
 			<Payout
 				:total="placedTotal - placedBet.wager"
@@ -160,7 +182,7 @@ function retractBet() {
 			class="bet-button cursor-ball-pointer ml-auto px-6 py-3 text-sm text-nowrap uppercase"
 			:class="placedBet && 'retract-button'"
 		>
-			<span v-show="!placedBet">Bet {{ wager.toLocaleString() }} {{ wager === 1 ? "coin" : "coins" }}</span>
+			<span v-show="!placedBet">{{ betButtonText }}</span>
 			<span v-show="placedBet">Retract bet</span>
 		</button>
 	</div>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import isLargeWager from "@/modules/isLargeWager"
+
 const props = defineProps<{
 	selectedParticipant?: {
 		pool: number
@@ -35,6 +37,8 @@ const emit = defineEmits<{
 	payoutInfoUpdated: [payoutInfo: PayoutInfo]
 }>()
 
+const largeWager = computed(() => isLargeWager(props.wager))
+
 watch(profit, (newProfit) => {
 	emit("payoutInfoUpdated", {
 		pool: newPool.value,
@@ -49,7 +53,7 @@ watch(profit, (newProfit) => {
 <template>
 	<table v-show="selectedParticipant !== undefined" class="min-h-18" :class="leftAlign ? 'ml-0' : 'ml-auto'">
 		<tbody>
-			<tr class="text-green-400">
+			<tr :class="largeWager ? 'text-gold' : 'text-cash'">
 				<th scope="row" class="pr-2" :class="leftAlign ? 'text-left' : 'text-right'">Profit</th>
 				<td>{{ profit.toLocaleString() }}</td>
 			</tr>

@@ -2,6 +2,8 @@
 
 @theme {
 	--color-cream: #e8dcb8;
+	--color-cash: var(--color-green-400);
+	--color-gold: var(--color-amber-200);
 
 	--cursor-ball-pointer: url("img/Cursor Select.png"), pointer;
 
